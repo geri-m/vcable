@@ -161,7 +161,7 @@
               </execution>
             </executions>
             <configuration>
-              <keyname>${gpg.keyname</keyname>
+              <keyname>${gpg.keyname}</keyname>
               <passphrase>${gpg.passphrase}</passphrase>
             </configuration>
           </plugin>
