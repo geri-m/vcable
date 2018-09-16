@@ -1,0 +1,62 @@
+<project xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://maven.apache.org/POM/4.0.0"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.vcable</groupId>
+  <artifactId>vcable</artifactId>
+  <packaging>pom</packaging>
+  <version>1.0.0-SNAPSHOT</version>
+  <modules>
+    <module>bom</module>
+    <module>utils</module>
+  </modules>
+  <name>VCable Parent Module</name>
+
+  <!-- fixe the conding of the code in order to be platform independed -->
+  <properties>
+    <project.build.sourceEncoding>
+      UTF-8
+    </project.build.sourceEncoding>
+    <project.reporting.outputEncoding>
+      UTF-8
+    </project.reporting.outputEncoding>
+    <maven.compiler.source>1.7</maven.compiler.source>
+    <maven.compiler.target>1.7</maven.compiler.target>
+    <release.plugin.version>2.5.3</release.plugin.version>
+    <deploy.plugin.version>2.8.2</deploy.plugin.version>
+  </properties>
+
+  <build>
+    <finalName>vcable</finalName>
+
+    <plugins>
+      <plugin>
+        <artifactId>maven-deploy-plugin</artifactId>
+        <version>${deploy.plugin.version}</version>
+        <executions>
+          <execution>
+            <id>default-deploy</id>
+            <phase>deploy</phase>
+            <goals>
+              <goal>deploy</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+
+    </plugins>
+
+  </build>
+
+  <distributionManagement>
+    <snapshotRepository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+    </snapshotRepository>
+    <repository>
+      <id>ossrh</id>
+      <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/
+      </url>
+    </repository>
+  </distributionManagement>
+
+</project>
