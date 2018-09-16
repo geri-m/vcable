@@ -25,6 +25,13 @@
     <deploy.plugin.version>2.8.2</deploy.plugin.version>
   </properties>
 
+  <scm>
+    <url>git@github.com:geri-m/vcable.git</url>
+    <connection>scm:git:git@github.com:geri-m/vcable.git</connection>
+    <developerConnection>scm:git:git@github.com:geri-m/vcable.git</developerConnection>
+    <tag>HEAD</tag>
+  </scm>
+
   <build>
     <finalName>vcable</finalName>
 
