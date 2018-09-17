@@ -10,8 +10,27 @@
     <module>utils</module>
   </modules>
   <name>VCable Parent Module</name>
+  <description>Virtual Cable is an IoT platform that uses OpenVpn to bridge Ethernet Connections.</description>
+  <url>https://github.com/geri-m/vcable</url>
 
-  <!-- fixe the conding of the code in order to be platform independed -->
+  <licenses>
+    <license>
+      <name>The MIT License (MIT)</name>
+      <url>http://opensource.org/licenses/MIT</url>
+      <distribution>repo</distribution>
+    </license>
+  </licenses>
+
+  <developers>
+    <developer>
+      <id>geri-m</id>
+      <name>Gerald Madlmayr</name>
+      <email>gerald.madlmayr@gmx.at</email>
+    </developer>
+  </developers>
+
+
+  <!-- fix the encoding of the code in order to be platform independent -->
   <properties>
     <project.build.sourceEncoding>
       UTF-8
