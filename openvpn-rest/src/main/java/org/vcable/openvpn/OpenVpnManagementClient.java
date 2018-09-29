@@ -46,7 +46,7 @@ public class OpenVpnManagementClient extends SocketClient {
     // in case there is input for 2 seconds, come back InputStream. only available _AFTER_ connect.
     setSoTimeout(OPEN_VPN_READ_TIMEOUT_IN_MS);
 
-    welcome = Welcome.getInstance(instance.readSingleLineWithoutEnd());
+    welcome = Welcome.getInstance(readSingleLineWithoutEnd());
   }
 
 

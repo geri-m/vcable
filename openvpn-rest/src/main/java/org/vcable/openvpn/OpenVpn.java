@@ -25,6 +25,7 @@ public class OpenVpn implements Runnable {
   public void run() {
     try {
       client = OpenVpnManagementClient.getInstance(address);
+      LOGGER.info("Version of Interface: {}", client.getVersionOfInterface());
     } catch (final IOException | ResponseParseException e) {
       LOGGER.error("Failed to Start Client: {}", e.getMessage());
     }
