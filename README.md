@@ -20,3 +20,5 @@ docker run -v $OVPN_DATA:/etc/openvpn --log-driver=none --rm vcable/openvpn ovpn
 docker run -v $OVPN_DATA:/etc/openvpn --log-driver=none --rm -it vcable/openvpn ovpn_initpki
 ```
 
+To Build the container run ```./build.sh``` in the openvpn folder and ```./run``` to start the container.
+
