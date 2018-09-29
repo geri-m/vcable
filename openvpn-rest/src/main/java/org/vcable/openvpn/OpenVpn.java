@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.vcable.openvpn.responses.ResponseParseException;
 
 public class OpenVpn implements Runnable {
 
@@ -24,7 +25,7 @@ public class OpenVpn implements Runnable {
   public void run() {
     try {
       client = OpenVpnManagementClient.getInstance(address);
-    } catch (final IOException e) {
+    } catch (final IOException | ResponseParseException e) {
       LOGGER.error("Failed to Start Client: {}", e.getMessage());
     }
   }

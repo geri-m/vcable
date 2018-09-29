@@ -5,6 +5,8 @@ import java.net.InetSocketAddress;
 import org.apache.commons.net.SocketClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.vcable.openvpn.responses.ResponseParseException;
+import org.vcable.openvpn.responses.Welcome;
 
 public class OpenVpnManagementClient extends SocketClient {
 
@@ -23,6 +25,7 @@ public class OpenVpnManagementClient extends SocketClient {
 
   private static OpenVpnManagementClient instance;
   private final InetSocketAddress managementAddress;
+  private final Welcome welcome;
 
   /**
    * Private Constructor. If Connection is not possbile this throws an IOException. Not nice.
@@ -31,7 +34,7 @@ public class OpenVpnManagementClient extends SocketClient {
    * @throws IOException Exception is thrown is the connection was not established.
    */
 
-  private OpenVpnManagementClient(final InetSocketAddress managementAddress) throws IOException {
+  private OpenVpnManagementClient(final InetSocketAddress managementAddress) throws IOException, ResponseParseException {
     super();
     this.managementAddress = managementAddress;
     setDefaultPort(managementAddress.getPort());
@@ -42,6 +45,8 @@ public class OpenVpnManagementClient extends SocketClient {
 
     // in case there is input for 2 seconds, come back InputStream. only available _AFTER_ connect.
     setSoTimeout(OPEN_VPN_READ_TIMEOUT_IN_MS);
+
+    welcome = Welcome.getInstance(instance.readSingleLineWithoutEnd());
   }
 
 
@@ -51,11 +56,10 @@ public class OpenVpnManagementClient extends SocketClient {
    * @param managementAddress Address containing host and port. Will usually be localhost 7505
    */
 
-  public static synchronized OpenVpnManagementClient getInstance(final InetSocketAddress managementAddress) throws IOException {
+  public static synchronized OpenVpnManagementClient getInstance(final InetSocketAddress managementAddress) throws IOException, ResponseParseException {
 
     if (instance == null) {
       instance = new OpenVpnManagementClient(managementAddress);
-      LOGGER.info(instance.readSingleLineWithoutEnd());
     }
     return instance;
   }
@@ -142,6 +146,10 @@ public class OpenVpnManagementClient extends SocketClient {
     _output_.write((command + NETASCII_EOL).getBytes());
     _output_.flush();
     return readMultiLineWithEnd();
+  }
+
+  public int getVersionOfInterface() {
+    return welcome.getVersionOfInterface();
   }
 
 

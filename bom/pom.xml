@@ -19,6 +19,7 @@
     <log4j2.version>2.11.0</log4j2.version>
     <apache.commons.io>2.6</apache.commons.io>
     <apache.commons.net>3.6</apache.commons.net>
+    <junit.version>4.12</junit.version>
 
   </properties>
   <packaging>pom</packaging>
@@ -49,6 +50,13 @@
         <groupId>commons-net</groupId>
         <artifactId>commons-net</artifactId>
         <version>${apache.commons.net}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>${junit.version}</version>
+        <scope>test</scope>
       </dependency>
     </dependencies>
   </dependencyManagement>
