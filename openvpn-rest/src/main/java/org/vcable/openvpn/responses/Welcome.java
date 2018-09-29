@@ -30,6 +30,4 @@ public class Welcome implements Response {
   public int getVersionOfInterface() {
     return versionOfInterface;
   }
-
-
 }
