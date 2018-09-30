@@ -6,7 +6,6 @@
   <version>0.0.2-SNAPSHOT</version>
   <modules>
     <module>bom</module>
-    <module>utils</module>
     <module>openvpn-rest</module>
   </modules>
   <name>VCable Parent Module</name>

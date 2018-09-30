@@ -5,11 +5,12 @@ import java.net.InetSocketAddress;
 import org.apache.commons.net.SocketClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.vcable.openvpn.responses.Pid;
 import org.vcable.openvpn.responses.ResponseParseException;
 import org.vcable.openvpn.responses.Version;
 import org.vcable.openvpn.responses.Welcome;
 
-public class OpenVpnManagementClient extends SocketClient implements Transiver {
+public class OpenVpnManagementClient extends SocketClient implements Transceiver {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(OpenVpnManagementClient.class);
   private static final int OPEN_VPN_READ_TIMEOUT_IN_MS = 2000;
@@ -49,6 +50,9 @@ public class OpenVpnManagementClient extends SocketClient implements Transiver {
    * GetInstance to get the Singleton of the Management Connection, as there can only be one Connection to the OpenVPN Management Connection
    *
    * @param managementAddress Address containing host and port. Will usually be localhost 7505
+   * @return {@link OpenVpnManagementClient} Instance
+   * @throws IOException Exception thrown if the communication failed.
+   * @throws ResponseParseException Exception throw if the welcome message was not parsed correctly.
    */
 
   public static synchronized OpenVpnManagementClient getInstance(final InetSocketAddress managementAddress) throws IOException, ResponseParseException {
@@ -134,12 +138,12 @@ public class OpenVpnManagementClient extends SocketClient implements Transiver {
    */
 
   @Override
-  public synchronized String transiveMultiLine(final String command) throws IOException {
+  public synchronized String transceiverMultiLine(final OpenVpnCommandEnum command) throws IOException {
     // we do a readMultiLineWithEnd first, in order to "clean" the in buffer
     // readMultiLineWithEnd();
 
     // now we write stuff and flush
-    _output_.write((command + NETASCII_EOL).getBytes());
+    _output_.write((command.getCommand() + NETASCII_EOL).getBytes());
     _output_.flush();
     return readMultiLineWithEnd();
   }
@@ -152,18 +156,42 @@ public class OpenVpnManagementClient extends SocketClient implements Transiver {
    */
 
   @Override
-  public String transiveSingleLine(final String command) throws IOException {
+  public String transceiverSingleLine(final OpenVpnCommandEnum command) throws IOException {
     // now we write stuff and flush
-    _output_.write((command + NETASCII_EOL).getBytes());
+    _output_.write((command.getCommand() + NETASCII_EOL).getBytes());
     _output_.flush();
     return readSingleLineWithoutEnd();
   }
 
-  public Welcome getWelcome() throws ResponseParseException {
+  /**
+   * Return the {@link Welcome} Object that was created during Connecting
+   *
+   * @return Welcome Object
+   */
+
+  public Welcome getWelcome() {
     return welcome;
   }
 
+  /**
+   * Return the {@link Version} that was received from Management Console
+   *
+   * @return {@link Version} Object
+   * @throws ResponseParseException Exception that is thrown if communication failed.
+   */
+
   public Version getVersion() throws ResponseParseException {
     return Version.getInstance(this);
+  }
+
+  /**
+   * Return the {@link Pid} that was received from Management Console
+   *
+   * @return {@link Pid} Object
+   * @throws ResponseParseException Exception that is thrown if communication failed.
+   */
+
+  public Pid getPid() throws ResponseParseException {
+    return Pid.getInstance(this);
   }
 }

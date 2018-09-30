@@ -29,6 +29,8 @@ public class OpenVpn implements Runnable {
           .getVersionOfInterface());
       LOGGER.info("Version: {}", client.getVersion()
           .getOpenVpnVersion());
+      LOGGER.info("Pid: {}", client.getPid()
+          .getPid());
     } catch (final IOException | ResponseParseException e) {
       LOGGER.error("Failed to Start Client: {}", e.getMessage());
     }

@@ -17,7 +17,6 @@
 
   <properties>
     <log4j2.version>2.11.0</log4j2.version>
-    <apache.commons.io>2.6</apache.commons.io>
     <apache.commons.net>3.6</apache.commons.net>
     <junit.version>4.12</junit.version>
 
@@ -36,13 +35,6 @@
         <groupId>org.apache.logging.log4j</groupId>
         <artifactId>log4j-slf4j-impl</artifactId>
         <version>${log4j2.version}</version>
-      </dependency>
-
-      <!-- basics for Console Communication -->
-      <dependency>
-        <groupId>commons-io</groupId>
-        <artifactId>commons-io</artifactId>
-        <version>${apache.commons.io}</version>
       </dependency>
 
       <!-- basics for Console Communication -->

@@ -26,6 +26,14 @@ public class Welcome implements Response {
     this.message = message;
   }
 
+  /**
+   * Singleton to generated Object from Response
+   *
+   * @param message String after Connect to parse
+   * @return Object to Create
+   * @throws ResponseParseException Exception if communication was not successful
+   */
+
   public static synchronized Welcome getInstance(final String message) throws ResponseParseException {
     final Matcher matcher = WELCOME_PATTERN.matcher(message);
     if (matcher.matches()) {

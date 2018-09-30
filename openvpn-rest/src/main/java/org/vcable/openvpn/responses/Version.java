@@ -3,7 +3,8 @@ package org.vcable.openvpn.responses;
 import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import org.vcable.openvpn.Transiver;
+import org.vcable.openvpn.OpenVpnCommandEnum;
+import org.vcable.openvpn.Transceiver;
 
 public class Version implements Response {
 
@@ -13,9 +14,8 @@ public class Version implements Response {
    * END
    */
 
-  private static final String VERSION_REGEX = "OpenVPN Version: (.+)Management Version: (\\d*).*END";
-  private static final Pattern VERSION_PATTERN = Pattern.compile(VERSION_REGEX, Pattern.DOTALL);
-  private static final String CMD = "version";
+  private static final String REGEX = "OpenVPN Version: (.+)Management Version: (\\d*).*END";
+  private static final Pattern PATTERN = Pattern.compile(REGEX, Pattern.DOTALL);
 
   private final String openVpnVersion;
   private final int versionOfInterface;
@@ -32,10 +32,18 @@ public class Version implements Response {
     this.openVpnVersion = openVpnVersion;
   }
 
-  public static synchronized Version getInstance(final Transiver transiver) throws ResponseParseException {
+  /**
+   * Singleton to fire command and generated Object from Response
+   *
+   * @param transceiver Link to Management Console
+   * @return Object to Create
+   * @throws ResponseParseException Exception if communication was not successful
+   */
+
+  public static synchronized Version getInstance(final Transceiver transceiver) throws ResponseParseException {
     final Matcher version;
     try {
-      version = VERSION_PATTERN.matcher(transiver.transiveMultiLine(CMD));
+      version = PATTERN.matcher(transceiver.transceiverMultiLine(OpenVpnCommandEnum.VERSION));
       if (version.matches()) {
         return new Version(version.group(1)
             .trim(), Integer.parseInt(version.group(2)
@@ -47,9 +55,21 @@ public class Version implements Response {
     throw new ResponseParseException("Unable to parse Version Object");
   }
 
+  /**
+   * Get Version String from OpenVpn
+   *
+   * @return Version String
+   */
+
   public String getOpenVpnVersion() {
     return openVpnVersion;
   }
+
+  /**
+   * Get Version Number from OpenVpn Management Console
+   *
+   * @return Version Number
+   */
 
   public int getVersionOfInterface() {
     return versionOfInterface;
