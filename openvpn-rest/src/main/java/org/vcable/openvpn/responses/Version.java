@@ -1,7 +1,9 @@
 package org.vcable.openvpn.responses;
 
+import java.io.IOException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import org.vcable.openvpn.Transiver;
 
 public class Version implements Response {
 
@@ -13,33 +15,36 @@ public class Version implements Response {
 
   private static final String VERSION_REGEX = "OpenVPN Version: (.+)Management Version: (\\d*).*END";
   private static final Pattern VERSION_PATTERN = Pattern.compile(VERSION_REGEX, Pattern.DOTALL);
+  private static final String CMD = "version";
 
-  private final String message;
   private final String openVpnVersion;
   private final int versionOfInterface;
 
-  private Version(final String openVpnVersion, final int versionOfInterface, final String message) {
+  /**
+   * Response Object from the Management interface on a 'version' command.
+   *
+   * @param openVpnVersion     Version String of OpenVpn
+   * @param versionOfInterface Version Number of the Management Interface
+   */
+
+  private Version(final String openVpnVersion, final int versionOfInterface) {
     this.versionOfInterface = versionOfInterface;
     this.openVpnVersion = openVpnVersion;
-    this.message = message;
   }
 
-  public static Version getInstance(final String message) throws ResponseParseException {
-    final Matcher version = VERSION_PATTERN.matcher(message);
-    if (version.matches()) {
-      try {
+  public static synchronized Version getInstance(final Transiver transiver) throws ResponseParseException {
+    final Matcher version;
+    try {
+      version = VERSION_PATTERN.matcher(transiver.transiveMultiLine(CMD));
+      if (version.matches()) {
         return new Version(version.group(1)
             .trim(), Integer.parseInt(version.group(2)
-            .trim()), message.trim());
-      } catch (final NumberFormatException nfe) {
-        throw new ResponseParseException(nfe);
+            .trim()));
       }
+    } catch (final IOException | NumberFormatException e) {
+      throw new ResponseParseException(e);
     }
     throw new ResponseParseException("Unable to parse Version Object");
-  }
-
-  public String getMessage() {
-    return message;
   }
 
   public String getOpenVpnVersion() {

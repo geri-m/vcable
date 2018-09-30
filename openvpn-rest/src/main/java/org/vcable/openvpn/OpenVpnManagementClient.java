@@ -6,22 +6,17 @@ import org.apache.commons.net.SocketClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.vcable.openvpn.responses.ResponseParseException;
+import org.vcable.openvpn.responses.Version;
 import org.vcable.openvpn.responses.Welcome;
 
-public class OpenVpnManagementClient extends SocketClient {
+public class OpenVpnManagementClient extends SocketClient implements Transiver {
 
   private static final Logger LOGGER = LoggerFactory.getLogger(OpenVpnManagementClient.class);
   private static final int OPEN_VPN_READ_TIMEOUT_IN_MS = 2000;
   private static final int MAX_AMOUNT_OF_CHARS_TO_READ = 2048;
 
   // Some Constant strings for the management Console
-  private static final String CMD_VERSION = "version";
-  private static final String CMD_PID = "pid";
-  private static final String CMD_EXIT = "exit";
-  private static final String CMD_STATUS = "status";
-  private static final String CMD_KILL = "kill";
   private static final String CMD_END = "END";
-  private static final String UNKNOWN_CMD = "ERROR: unknown command, enter 'help' for more options";
 
   private static OpenVpnManagementClient instance;
   private final InetSocketAddress managementAddress;
@@ -89,7 +84,7 @@ public class OpenVpnManagementClient extends SocketClient {
         endFound = instr.toString()
             .toUpperCase()
             .contains(CMD_END);
-        LOGGER.debug("Endfound: '{}'", endFound);
+        LOGGER.debug("End found: '{}'", endFound);
       } else {
         // not information readMultiLineWithEnd
         LOGGER.debug("Not Information readMultiLineWithEnd, timeout");
@@ -135,12 +130,13 @@ public class OpenVpnManagementClient extends SocketClient {
    * Sends Command (String) to Management Console and reads till "END" String is found
    *
    * @param command to be sent to the management console
-   * @return result from the management console but without "END" String
+   * @return result from the management console
    */
 
-  private synchronized String transive(final String command) throws IOException {
+  @Override
+  public synchronized String transiveMultiLine(final String command) throws IOException {
     // we do a readMultiLineWithEnd first, in order to "clean" the in buffer
-    readMultiLineWithEnd();
+    // readMultiLineWithEnd();
 
     // now we write stuff and flush
     _output_.write((command + NETASCII_EOL).getBytes());
@@ -148,9 +144,26 @@ public class OpenVpnManagementClient extends SocketClient {
     return readMultiLineWithEnd();
   }
 
-  public int getVersionOfInterface() {
-    return welcome.getVersionOfInterface();
+  /**
+   * Sends Command (String) to Management Console and reads only one line
+   *
+   * @param command to be sent to the management console
+   * @return result from the management console
+   */
+
+  @Override
+  public String transiveSingleLine(final String command) throws IOException {
+    // now we write stuff and flush
+    _output_.write((command + NETASCII_EOL).getBytes());
+    _output_.flush();
+    return readSingleLineWithoutEnd();
   }
 
+  public Welcome getWelcome() throws ResponseParseException {
+    return welcome;
+  }
 
+  public Version getVersion() throws ResponseParseException {
+    return Version.getInstance(this);
+  }
 }
