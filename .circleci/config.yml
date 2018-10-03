@@ -8,6 +8,8 @@ jobs:
     docker:
     # specify the version you desire here
     - image: circleci/openjdk:8-jdk
+    # Adding OpenVPN Image from Docker Hub
+    - image: vcable/openvpn:latest
 
     # Specify service dependencies here if necessary
     # CircleCI maintains a library of pre-built images

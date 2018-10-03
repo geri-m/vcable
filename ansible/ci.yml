@@ -1,0 +1,45 @@
+---
+- name: Setup Ubuntu Minimal for Usage as sudo
+  hosts: localhost
+  user: gerald
+  become_user: root
+  become: yes
+
+  tasks:
+  - name: install base packages
+    apt:
+      name: "{{ items }}"
+    vars:
+      items:
+      - telnet
+      - net-tools
+      - curl
+      - zip
+      - unzip
+      - apt-transport-https
+      - ca-certificates
+      - software-properties-common
+      - bridge-utils
+      - openvpn
+
+  - name: GPG key for Docker
+    apt_key:
+      id: 9DC858229FC7DD38854AE2D88D81803C0EBFCD88
+      url: https://download.docker.com/linux/ubuntu/gpg
+      state: present
+
+  - name: add Repo for Docker CE for Ubuntu Bionic
+    apt_repository:
+      repo: deb https://download.docker.com/linux/ubuntu bionic universe
+      state: present
+
+  - name: Update and upgrade apt packages
+    apt:
+      upgrade: yes
+      update_cache: yes
+      cache_valid_time: 86400 #One day
+
+  - name: install Docker CE
+    apt:
+      name:
+      - docker-ce
