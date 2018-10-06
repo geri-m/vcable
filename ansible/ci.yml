@@ -44,7 +44,18 @@
       name:
       - docker-ce
 
-  # TODO:
-  # create more general directory for openVPN Data (tmp/openvpn)
-  # put OVPN_DATA Variables into /etc/environment
-  # put vars file there and mount into container
+  - name: Creates directory for storing all keys for the openvpn containers
+    file: path=/tmp/openvpn state=directory
+
+  - name: Create Environement Variable that containes the Information on the path
+    shell: echo 'export OVPN_DATA="/tmp/openvpn"' >> /etc/environment
+    args:
+      executable: /bin/bash
+
+  - name: Copy vars file into VM
+    copy:
+      src: ./vars
+      dest: /tmp/vars
+      owner: root
+      group: root
+      mode: 0644
