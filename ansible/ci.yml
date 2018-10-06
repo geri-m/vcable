@@ -43,3 +43,8 @@
     apt:
       name:
       - docker-ce
+
+  # TODO:
+  # create more general directory for openVPN Data (tmp/openvpn)
+  # put OVPN_DATA Variables into /etc/environment
+  # put vars file there and mount into container
