@@ -21,6 +21,12 @@
       - software-properties-common
       - bridge-utils
       - openvpn
+      - python-pip
+
+  - name: Install Docker Module for Python
+    pip:
+      name: docker
+
 
   - name: GPG key for Docker-CE
     apt_key:
@@ -61,3 +67,85 @@
       owner: root
       group: root
       mode: 0644
+
+  # docker run -v $OVPN_DATA:/etc/openvpn --rm kylemanna/openvpn ovpn_genconfig -u udp://localhost -e 'management 0.0.0.0 7505'
+  - name: Init OpenVPN Config
+    docker_container:
+      name: openvpn
+      image: kylemanna/openvpn
+      command: ovpn_genconfig -u udp://localhost -e 'management 0.0.0.0 7505'
+      state: started
+      cleanup: yes
+      volumes:
+      # we can't use $OVPN_DATA as /etc/environment requires a reboot to work.
+      - /tmp/openvpn:/etc/openvpn
+
+  - name: Wait until Config is present
+    wait_for:
+      path: /tmp/openvpn/openvpn.conf
+      state: present
+
+  - name: Wait until File with ENV varialbes is present
+    wait_for:
+      path: /tmp/openvpn/ovpn_env.sh
+      state: present
+
+  # docker run -v $OVPN_DATA:/etc/openvpn -v /tmp/vars:/usr/local/bin/vars --rm kylemanna/openvpn ovpn_initpki nopass
+  - name: Create Key Material for Server
+    docker_container:
+      name: openvpn
+      image: kylemanna/openvpn
+      command: ovpn_initpki nopass
+      state: started
+      cleanup: yes
+      volumes:
+      # we can't use $OVPN_DATA as /etc/environment requires a reboot to work.
+      - /tmp/openvpn:/etc/openvpn
+      # vars contains the config for 'easyrsa build-ca' in ovpn_initpki
+      - /tmp/vars:/usr/local/bin/vars
+
+  - name: Wait until Localhost key is present -- this takes time. Relax ...
+    wait_for:
+      path: /tmp/openvpn/pki/private/localhost.key
+      state: present
+
+  - name: Wait until Localhost certificate is present
+    wait_for:
+      path: /tmp/openvpn/pki/issued/localhost.crt
+      state: present
+
+  - name: Wait until Localhost csr is present
+    wait_for:
+      path: /tmp/openvpn/pki/reqs/localhost.req
+      state: present
+
+  # docker run -v $OVPN_DATA:/etc/openvpn -v /tmp/vars:/usr/local/bin/vars --rm -it kylemanna/openvpn easyrsa build-client-full client_1 nopass
+  - name: Create Key Material for Client 1
+    docker_container:
+      name: openvpn
+      image: kylemanna/openvpn
+      command: easyrsa build-client-full client_1 nopass
+      state: started
+      volumes:
+      # we can't use $OVPN_DATA as /etc/environment requires a reboot to work.
+      - /tmp/openvpn:/etc/openvpn
+
+  - name: Wait until Client 1 key is present
+    wait_for:
+      path: /tmp/openvpn/pki/private/client_1.key
+      state: present
+
+  - name: Wait until Client 1 certificate is present
+    wait_for:
+      path: /tmp/openvpn/pki/issued/client_1.crt
+      state: present
+
+  - name: Wait until Client 1 csr is present
+    wait_for:
+      path: /tmp/openvpn/pki/reqs/client_1.req
+      state: present
+
+  # docker run -v $OVPN_DATA:/etc/openvpn --rm kylemanna/openvpn ovpn_getclient client_1 \> /etc/openvpn/client_1.ovpn
+  # Piping the output of the command to a file was somehow not possible with the Ansible docker_container plugin.
+  - name: Export Key Material for Client to OVPN File
+    shell: docker run -v /tmp/openvpn:/etc/openvpn --rm kylemanna/openvpn ovpn_getclient client_1 > /tmp/openvpn/client_1.ovpn
