@@ -9,7 +9,7 @@ import org.vcable.openvpn.responses.ResponseParseException;
 import junit.framework.TestCase;
 
 public class PidTest extends TestCase {
-  private static final Logger LOGGER = LoggerFactory.getLogger(VersionTest.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(PidTest.class);
 
   public void test01_PidOkayTest() {
 
