@@ -22,13 +22,13 @@
       - bridge-utils
       - openvpn
 
-  - name: GPG key for Docker
+  - name: GPG key for Docker-CE
     apt_key:
       id: 9DC858229FC7DD38854AE2D88D81803C0EBFCD88
       url: https://download.docker.com/linux/ubuntu/gpg
       state: present
 
-  - name: add Repo for Docker CE for Ubuntu Bionic
+  - name: Add Repo for Docker CE for Ubuntu Bionic
     apt_repository:
       repo: deb https://download.docker.com/linux/ubuntu bionic universe
       state: present
@@ -39,7 +39,7 @@
       update_cache: yes
       cache_valid_time: 86400 #One day
 
-  - name: install Docker CE
+  - name: Install Docker CE
     apt:
       name:
       - docker-ce
@@ -47,12 +47,14 @@
   - name: Creates directory for storing all keys for the openvpn containers
     file: path=/tmp/openvpn state=directory
 
-  - name: Create Environement Variable that containes the Information on the path
-    shell: echo 'export OVPN_DATA="/tmp/openvpn"' >> /etc/environment
-    args:
-      executable: /bin/bash
+  - name: Create Environement Variable OVPN_DATA that contains the Information on the path for the certs etc.
+    lineinfile:
+      path: /etc/environment
+      state: present
+      regexp: '^export OVPN_DATA='
+      line: 'export OVPN_DATA="/tmp/openvpn"'
 
-  - name: Copy vars file into VM
+  - name: Copy 'vars' file into /tmp folder of VM
     copy:
       src: ./vars
       dest: /tmp/vars

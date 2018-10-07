@@ -40,9 +40,11 @@ For Test Purpose we use this [docker image](https://hub.docker.com/r/kylemanna/o
 In order to run the container with the enabled management interface, we add a custom config, namely the management interface config. Using
 no password for the Server CA is okay for testing purpose.
 
+The ```vars``` file enables us to use batch mode, which does not require interaction during setup (as long as there are no previous) certs. 
+
 ```
 docker run -v $OVPN_DATA:/etc/openvpn --rm kylemanna/openvpn ovpn_genconfig -u udp://localhost -e 'management 0.0.0.0 7505'
-docker run -v $OVPN_DATA:/etc/openvpn --rm -it kylemanna/openvpn ovpn_initpki nopass
+docker run -v $OVPN_DATA:/etc/openvpn -v /tmp/vars:/usr/local/bin/vars --rm -it kylemanna/openvpn ovpn_initpki nopass
 ```
 
 Run the server container as daemon
