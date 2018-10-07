@@ -15,8 +15,7 @@ public class StatusTest extends TestCase {
   private static final String TEST_01 = "OpenVPN CLIENT LIST\nUpdated,Sun Apr 21 17:52:33 2013\nCommon Name,Real Address,Bytes Received,Bytes Sent,Connected Since\nROUTING " +
       "TABLE\nVirtual Address,Common Name,Real Address,Last Ref\nGLOBAL STATS\nMax bcast/mcast queue length,0\nEND\n";
   private static final String TEST_02 = "OpenVPN CLIENT LIST\nUpdated,Sun Apr 21 18:07:23 2013\nCommon Name,Real Address,Bytes Received,Bytes Sent,Connected Since\nUNDEF,84" +
-      ".112.155.68:46633,1404,5889,Sun Apr 21 18:07:19 2013\nROUTING TABLE\nVirtual Address,Common Name,Real Address,Last Ref\nGLOBAL STATS\nMax bcast/mcast queue " + "length," +
-      "0\nEND\n";
+      ".112.155.68:46633,1404,5889,Sun Apr 21 18:07:19 2013\nROUTING TABLE\nVirtual Address,Common Name,Real Address,Last Ref\nGLOBAL STATS\nMax bcast/mcast queue " + "length,0\nEND\n";
   private static final String TEST_03 = "OpenVPN CLIENT LIST\nUpdated,Sun Apr 21 18:08:21 2013\nCommon Name,Real Address,Bytes Received,Bytes Sent,Connected " + "Since" +
       "\nvcable0003.vcable.org,84.112.155.68:43241,7452,9556,Sun Apr 21 18:07:44 2013\nROUTING TABLE\nVirtual Address,Common Name,Real Address,Last Ref\nGLOBAL " + "STATS\nMax " +
       "bcast/mcast queue length,0\nEND\n";
