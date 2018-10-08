@@ -12,37 +12,30 @@ import org.vcable.openvpn.responses.ResponseParseException;
 public class Utils {
 
   private static final String DATE_FORMAT = "EEE MMM dd HH:mm:ss yyyy";
-  private static final String DATE_FORMAT_SHORT = "yyyy-MM-dd HH:mm:ss";
-  private static final String TIME_FORMAT = "HH:mm:ss";
-  private static final char[] hexArray = "0123456789ABCDEF".toCharArray();
 
   // DateFormater must be local as it is not thread save.
   private static final DateFormat FORMATTER_DATE_LONG = new SimpleDateFormat(DATE_FORMAT, Locale.US);
-  private static final DateFormat SIMPLE_DATE_FORMATTER = new SimpleDateFormat(DATE_FORMAT_SHORT, Locale.US);
-  private static final DateFormat SIMPLE_TIME_FORMATTER = new SimpleDateFormat(TIME_FORMAT, Locale.US);
+
 
   public static InetSocketAddress createInetSocketAddressFromString(final String socket) throws ResponseParseException {
-
-    InetAddress address = null;
-    int port = 0;
-
-    InetSocketAddress result = null;
-
-    String split[] = socket.trim()
+    final InetAddress address;
+    final String[] splitAddress = socket.trim()
         .split(":");
     try {
 
-      address = InetAddress.getByName(split[0].replace("/", ""));
+      address = InetAddress.getByName(splitAddress[0].replace("/", ""));
     } catch (final UnknownHostException e) {
-      throw new ResponseParseException("Unable to parse '" + split[0] + "' as host. Exception: " + e.toString());
+      throw new ResponseParseException("Unable to parse '" + splitAddress[0] + "' as host/IP. Exception: " + e.toString());
     }
 
+    final int port;
     try {
-      port = Integer.parseInt(split[1]);
+      port = Integer.parseInt(splitAddress[1]);
     } catch (final NumberFormatException e) {
-      throw new ResponseParseException("Unable to parse '" + split[1] + "' as Port. Exception: " + e.toString());
+      throw new ResponseParseException("Unable to parse '" + splitAddress[1] + "' as Port. Exception: " + e.toString());
     }
 
+    final InetSocketAddress result;
     try {
       result = new InetSocketAddress(address, port);
     } catch (final IllegalArgumentException e) {
@@ -67,41 +60,4 @@ public class Utils {
       throw new ResponseParseException(e);
     }
   }
-
-  /**
-   * Helper Method to create out of String of Format yyyy-MM-dd HH:mm:ss a Date Object
-   *
-   * @param dateString Date-Time as String in the  yyyy-MM-dd HH:mm:s
-   * @return Date Object
-   * @throws ResponseParseException Thrown if Parsing was not possible
-   */
-
-  public static Date createDateFromShortString(final String dateString) throws ResponseParseException {
-    try {
-      return SIMPLE_DATE_FORMATTER.parse(dateString);
-    } catch (final Exception e) {
-      throw new ResponseParseException(e);
-    }
-  }
-
-  public static Date createDateFromTime(final String timeString) throws ResponseParseException {
-
-
-    Date result = null;
-
-
-    try {
-      return SIMPLE_TIME_FORMATTER.parse(timeString);
-    } catch (final Exception e) {
-      throw new ResponseParseException(e);
-    }
-  }
-/*
-  public static String createDateString(final Date date) {
-    DateFormat formatterDateLong = new SimpleDateFormat(DATE_FORMAT, Locale.US);
-    return formatterDateLong.format(date);
-  }
-*/
-
-
 }

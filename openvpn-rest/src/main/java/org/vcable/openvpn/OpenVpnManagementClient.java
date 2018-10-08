@@ -51,7 +51,7 @@ public class OpenVpnManagementClient extends SocketClient implements Transceiver
    *
    * @param managementAddress Address containing host and port. Will usually be localhost 7505
    * @return {@link OpenVpnManagementClient} Instance
-   * @throws IOException Exception thrown if the communication failed.
+   * @throws IOException            Exception thrown if the communication failed.
    * @throws ResponseParseException Exception throw if the welcome message was not parsed correctly.
    */
 

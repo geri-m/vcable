@@ -17,8 +17,7 @@ public class VersionTest extends TestCase {
     final Transceiver t = new Transceiver() {
       @Override
       public String transceiverMultiLine(final OpenVpnCommandEnum command) {
-        return "OpenVPN Version: OpenVPN 2.4.6 x86_64-alpine-linux-musl [SSL (OpenSSL)] [LZO] [LZ4] [EPOLL] [MH/PKTINFO] [AEAD] built on Jul  8 2018\nManagement " + "Version: " +
-            "1\nEND";
+        return "OpenVPN Version: OpenVPN 2.4.6 x86_64-alpine-linux-musl [SSL (OpenSSL)] [LZO] [LZ4] [EPOLL] [MH/PKTINFO] [AEAD] built on Jul  8 2018\nManagement " + "Version: " + "1\nEND";
       }
 
       @Override
@@ -41,8 +40,7 @@ public class VersionTest extends TestCase {
     final Transceiver t = new Transceiver() {
       @Override
       public String transceiverMultiLine(final OpenVpnCommandEnum command) {
-        return "OpenVPN Version: OpenVPN 2.4.6 x86_64-alpine-linux-musl [SSL (OpenSSL)] [LZO] [LZ4] [EPOLL] [MH/PKTINFO] [AEAD] built on Jul  8 2018\nManagement " + "Version: " +
-            "x\nEND";
+        return "OpenVPN Version: OpenVPN 2.4.6 x86_64-alpine-linux-musl [SSL (OpenSSL)] [LZO] [LZ4] [EPOLL] [MH/PKTINFO] [AEAD] built on Jul  8 2018\nManagement " + "Version: " + "x\nEND";
       }
 
       @Override
