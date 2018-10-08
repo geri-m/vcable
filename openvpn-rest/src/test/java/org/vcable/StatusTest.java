@@ -1,5 +1,6 @@
 package org.vcable;
 
+import java.text.SimpleDateFormat;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import org.slf4j.Logger;
@@ -44,6 +45,7 @@ public class StatusTest extends TestCase {
       "TABLE\nVirtual Address,Common Name,Real Address,Last Ref\nGLOBAL STATS\nMax bcast/mcast queue length,0\nEND\n";
 
   private static final Logger LOGGER = LoggerFactory.getLogger(StatusTest.class);
+  private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
   public void test01_StatusEmptyListOkayTest() {
 
@@ -60,7 +62,12 @@ public class StatusTest extends TestCase {
     };
 
     try {
-      Status s = Status.getInstance(t);
+      final Status s = Status.getInstance(t);
+      assertEquals(0, s.getClientsConnectedList()
+          .size());
+      assertEquals(0, s.getRoutingTableEntryList()
+          .size());
+      assertEquals("2013-04-21 17:52:33", SDF.format(s.getUpdated()));
     } catch (final ResponseParseException e) {
       fail();
     }
@@ -166,9 +173,11 @@ public class StatusTest extends TestCase {
     };
 
     try {
-      Status s = Status.getInstance(t);
-    } catch (final ResponseParseException e) {
+      // IP Address is incorrect. Throw Exception.
+      Status.getInstance(t);
       fail();
+    } catch (final ResponseParseException e) {
+      assertEquals("Unable to parse '444.442.443.444' as host. Exception: java.net.UnknownHostException: 444.442.443.444: nodename nor servname provided, or not known", e.getMessage());
     }
   }
 
