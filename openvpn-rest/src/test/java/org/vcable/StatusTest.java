@@ -196,8 +196,9 @@ public class StatusTest extends TestCase {
       Status.getInstance(t);
       fail();
     } catch (final ResponseParseException e) {
-      assertEquals("Unable to parse '444.442.443.444' as host/IP. Exception: java.net.UnknownHostException: 444.442.443.444: nodename nor servname provided, or not known",
-          e.getMessage());
+      // Fix: OpenJDK and Oracle JDK have different Error Messages for the UnknownHostException
+      assertTrue(e.getMessage()
+          .startsWith("Unable to parse '444.442.443.444' as host/IP. Exception: java.net.UnknownHostException: 444.442.443.444:"));
     }
   }
 
