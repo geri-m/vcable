@@ -1,52 +1,26 @@
 package org.vcable;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.vcable.openvpn.OpenVpnCommandEnum;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.fail;
+import org.junit.jupiter.api.Test;
 import org.vcable.openvpn.Transceiver;
 import org.vcable.openvpn.responses.Pid;
 import org.vcable.openvpn.responses.ResponseParseException;
-import junit.framework.TestCase;
 
-public class PidTest extends TestCase {
-  private static final Logger LOGGER = LoggerFactory.getLogger(PidTest.class);
 
-  public void test01_PidOkayTest() {
+public class PidTest {
 
-    final Transceiver t = new Transceiver() {
-      @Override
-      public String transceiverMultiLine(final OpenVpnCommandEnum command) {
-        return null;
-      }
-
-      @Override
-      public String transceiverSingleLine(final OpenVpnCommandEnum command) {
-        return "SUCCESS: pid=1";
-      }
-    };
-
-    try {
-      final Pid pid = Pid.getInstance(t);
-      assertEquals(1, pid.getPid());
-    } catch (final ResponseParseException e) {
-      LOGGER.error("Error: {}", e.toString());
-      fail();
-    }
+  @Test
+  public void pidOkayTest() throws ResponseParseException {
+    final Transceiver t = new MockTransceiver("SUCCESS: pid=1", null);
+    final Pid pid = Pid.getInstance(t);
+    assertEquals(1, pid.getPid());
   }
 
-  public void test02_PidNotOkayTest() {
-    final Transceiver t = new Transceiver() {
-      @Override
-      public String transceiverMultiLine(final OpenVpnCommandEnum command) {
-        return null;
-      }
-
-      @Override
-      public String transceiverSingleLine(final OpenVpnCommandEnum command) {
-        return "SUCCESS: pid=d";
-      }
-    };
-
+  @Test
+  public void pidNotOkayTest() {
+    final Transceiver t = new MockTransceiver("SUCCESS: pid=d", null);
     try {
       Pid.getInstance(t);
       fail();
@@ -55,19 +29,9 @@ public class PidTest extends TestCase {
     }
   }
 
-  public void test03_PidIncorrectTest() {
-    final Transceiver t = new Transceiver() {
-      @Override
-      public String transceiverMultiLine(final OpenVpnCommandEnum command) {
-        return null;
-      }
-
-      @Override
-      public String transceiverSingleLine(final OpenVpnCommandEnum command) {
-        return "NO DATA";
-      }
-    };
-
+  @Test
+  public void pidIncorrectTest() {
+    final Transceiver t = new MockTransceiver("NO DATA", null);
     try {
       Pid.getInstance(t);
       fail();
@@ -75,5 +39,4 @@ public class PidTest extends TestCase {
       assertEquals("Unable to parse Pid Object", e.getMessage());
     }
   }
-
 }

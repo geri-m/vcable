@@ -18,7 +18,7 @@
   <properties>
     <log4j2.version>2.11.0</log4j2.version>
     <apache.commons.net>3.6</apache.commons.net>
-    <junit.version>4.12</junit.version>
+    <junit.version>5.3.1</junit.version>
 
   </properties>
   <packaging>pom</packaging>
@@ -44,12 +44,21 @@
         <version>${apache.commons.net}</version>
       </dependency>
 
+
       <dependency>
-        <groupId>junit</groupId>
-        <artifactId>junit</artifactId>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-api</artifactId>
         <version>${junit.version}</version>
         <scope>test</scope>
       </dependency>
+
+      <dependency>
+        <groupId>org.junit.jupiter</groupId>
+        <artifactId>junit-jupiter-engine</artifactId>
+        <version>${junit.version}</version>
+        <scope>test</scope>
+      </dependency>
+
     </dependencies>
   </dependencyManagement>
 

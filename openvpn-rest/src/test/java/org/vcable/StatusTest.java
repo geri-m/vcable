@@ -1,17 +1,17 @@
 package org.vcable;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.fail;
 import java.text.SimpleDateFormat;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.vcable.openvpn.OpenVpnCommandEnum;
 import org.vcable.openvpn.Transceiver;
 import org.vcable.openvpn.responses.ResponseParseException;
 import org.vcable.openvpn.responses.Status;
-import junit.framework.TestCase;
 
-public class StatusTest extends TestCase {
+public class StatusTest {
 
   private static final String TEST_01 = "OpenVPN CLIENT LIST\nUpdated,Sun Apr 21 17:52:33 2013\nCommon Name,Real Address,Bytes Received,Bytes Sent,Connected Since\nROUTING " +
       "TABLE\nVirtual Address,Common Name,Real Address,Last Ref\nGLOBAL STATS\nMax bcast/mcast queue length,0\nEND\n";
@@ -40,157 +40,73 @@ public class StatusTest extends TestCase {
   private static final Logger LOGGER = LoggerFactory.getLogger(StatusTest.class);
   private static final SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
-  public void test01_StatusEmptyListOkayTest() {
+  @Test
+  public void statusEmptyListOkayTest() throws ResponseParseException {
+    final Transceiver t = new MockTransceiver(null, TEST_01);
+    final Status s = Status.getInstance(t);
+    assertEquals(0, s.getClientsConnectedList()
+        .size());
+    assertEquals(0, s.getRoutingTableEntryList()
+        .size());
+    assertEquals("2013-04-21 17:52:33", SDF.format(s.getUpdated()));
 
-    final Transceiver t = new Transceiver() {
-      @Override
-      public String transceiverMultiLine(final OpenVpnCommandEnum command) {
-        return TEST_01;
-      }
-
-      @Override
-      public String transceiverSingleLine(final OpenVpnCommandEnum command) {
-        return null;
-      }
-    };
-
-    try {
-      final Status s = Status.getInstance(t);
-      assertEquals(0, s.getClientsConnectedList()
-          .size());
-      assertEquals(0, s.getRoutingTableEntryList()
-          .size());
-      assertEquals("2013-04-21 17:52:33", SDF.format(s.getUpdated()));
-    } catch (final ResponseParseException e) {
-      fail();
-    }
   }
 
+  @Test
+  public void statusEmptyListOkayTest02() throws ResponseParseException {
+    final Transceiver t = new MockTransceiver(null, TEST_02);
 
-  public void test02_StatusEmptyListOkayTest() {
 
-    final Transceiver t = new Transceiver() {
-      @Override
-      public String transceiverMultiLine(final OpenVpnCommandEnum command) {
-        return TEST_02;
-      }
+    final Status s = Status.getInstance(t);
+    assertEquals(1, s.getClientsConnectedList()
+        .size());
+    // Get a single Client Connected Element
+    assertEquals("UNDEF", s.getClientsConnectedList()
+        .get(0)
+        .getName());
+    assertEquals("84.112.155.68:46633", s.getClientsConnectedList()
+        .get(0)
+        .getAddress()
+        .toString()
+        .replace("/", ""));
+    assertEquals(1404, s.getClientsConnectedList()
+        .get(0)
+        .getReceived());
+    assertEquals(5889, s.getClientsConnectedList()
+        .get(0)
+        .getSent());
+    assertEquals("2013-04-21 18:07:19", SDF.format(s.getClientsConnectedList()
+        .get(0)
+        .getLastRef()));
 
-      @Override
-      public String transceiverSingleLine(final OpenVpnCommandEnum command) {
-        return null;
-      }
-    };
-
-    try {
-      final Status s = Status.getInstance(t);
-      assertEquals(1, s.getClientsConnectedList()
-          .size());
-      // Get a single Client Connected Element
-      assertEquals("UNDEF", s.getClientsConnectedList()
-          .get(0)
-          .getName());
-      assertEquals("84.112.155.68:46633", s.getClientsConnectedList()
-          .get(0)
-          .getAddress()
-          .toString()
-          .replace("/", ""));
-      assertEquals(1404, s.getClientsConnectedList()
-          .get(0)
-          .getReceived());
-      assertEquals(5889, s.getClientsConnectedList()
-          .get(0)
-          .getSent());
-      assertEquals("2013-04-21 18:07:19", SDF.format(s.getClientsConnectedList()
-          .get(0)
-          .getLastRef()));
-
-      assertEquals(0, s.getRoutingTableEntryList()
-          .size());
-      assertEquals("2013-04-21 18:07:23", SDF.format(s.getUpdated()));
-      LOGGER.info(TEST_02);
-      LOGGER.info(s.toString());
-    } catch (final ResponseParseException e) {
-      fail();
-    }
+    assertEquals(0, s.getRoutingTableEntryList()
+        .size());
+    assertEquals("2013-04-21 18:07:23", SDF.format(s.getUpdated()));
+    LOGGER.info(TEST_02);
+    LOGGER.info(s.toString());
   }
 
-  public void test03_StatusEmptyListOkayTest() {
-
-    final Transceiver t = new Transceiver() {
-      @Override
-      public String transceiverMultiLine(final OpenVpnCommandEnum command) {
-        return TEST_03;
-      }
-
-      @Override
-      public String transceiverSingleLine(final OpenVpnCommandEnum command) {
-        return null;
-      }
-    };
-
-    try {
-      Status s = Status.getInstance(t);
-    } catch (final ResponseParseException e) {
-      fail();
-    }
+  @Test
+  public void statusEmptyListOkayTest03() throws ResponseParseException {
+    final Transceiver t = new MockTransceiver(null, TEST_03);
+    Status.getInstance(t);
   }
 
-  public void test04_StatusEmptyListOkayTest() {
-
-    final Transceiver t = new Transceiver() {
-      @Override
-      public String transceiverMultiLine(final OpenVpnCommandEnum command) {
-        return TEST_04;
-      }
-
-      @Override
-      public String transceiverSingleLine(final OpenVpnCommandEnum command) {
-        return null;
-      }
-    };
-
-    try {
-      Status s = Status.getInstance(t);
-    } catch (final ResponseParseException e) {
-      fail();
-    }
+  @Test
+  public void statusEmptyListOkayTest04() throws ResponseParseException {
+    final Transceiver t = new MockTransceiver(null, TEST_04);
+    Status.getInstance(t);
   }
 
-  public void test05_StatusEmptyListOkayTest() {
-
-    final Transceiver t = new Transceiver() {
-      @Override
-      public String transceiverMultiLine(final OpenVpnCommandEnum command) {
-        return TEST_05;
-      }
-
-      @Override
-      public String transceiverSingleLine(final OpenVpnCommandEnum command) {
-        return null;
-      }
-    };
-
-    try {
-      Status s = Status.getInstance(t);
-    } catch (final ResponseParseException e) {
-      fail();
-    }
+  @Test
+  public void statusEmptyListOkayTest05() throws ResponseParseException {
+    final Transceiver t = new MockTransceiver(null, TEST_05);
+    Status.getInstance(t);
   }
 
-  public void test06_StatusEmptyListFailTest() {
-
-    final Transceiver t = new Transceiver() {
-      @Override
-      public String transceiverMultiLine(final OpenVpnCommandEnum command) {
-        return TEST_06_FAIL_IP;
-      }
-
-      @Override
-      public String transceiverSingleLine(final OpenVpnCommandEnum command) {
-        return null;
-      }
-    };
-
+  @Test
+  public void statusEmptyListFailTest06() {
+    final Transceiver t = new MockTransceiver(null, TEST_06_FAIL_IP);
     try {
       // IP Address is incorrect. Throw Exception.
       Status.getInstance(t);
@@ -202,80 +118,21 @@ public class StatusTest extends TestCase {
     }
   }
 
-  public void test07_StatusEmptyListFailTest() {
-
-    final Transceiver t = new Transceiver() {
-      @Override
-      public String transceiverMultiLine(final OpenVpnCommandEnum command) {
-        return TEST_07;
-      }
-
-      @Override
-      public String transceiverSingleLine(final OpenVpnCommandEnum command) {
-        return null;
-      }
-    };
-
-    try {
-      Status s = Status.getInstance(t);
-    } catch (final ResponseParseException e) {
-      fail();
-    }
+  @Test
+  public void statusEmptyListFailTest07() throws ResponseParseException {
+    final Transceiver t = new MockTransceiver(null, TEST_07);
+    Status.getInstance(t);
   }
 
-  public void test08_StatusEmptyListFailTest() {
-
-    final Transceiver t = new Transceiver() {
-      @Override
-      public String transceiverMultiLine(final OpenVpnCommandEnum command) {
-        return TEST_08;
-      }
-
-      @Override
-      public String transceiverSingleLine(final OpenVpnCommandEnum command) {
-        return null;
-      }
-    };
-
-    try {
-      Status s = Status.getInstance(t);
-    } catch (final ResponseParseException e) {
-      fail();
-    }
+  @Test
+  public void statusEmptyListFailTest08() throws ResponseParseException {
+    final Transceiver t = new MockTransceiver(null, TEST_08);
+    Status.getInstance(t);
   }
 
-  public void test09_StatusEmptyListFailTest() {
-
-    final Transceiver t = new Transceiver() {
-      @Override
-      public String transceiverMultiLine(final OpenVpnCommandEnum command) {
-        return TEST_09;
-      }
-
-      @Override
-      public String transceiverSingleLine(final OpenVpnCommandEnum command) {
-        return null;
-      }
-    };
-
-    try {
-      Status s = Status.getInstance(t);
-    } catch (final ResponseParseException e) {
-      fail();
-    }
+  @Test
+  public void statusEmptyListFailTest09() throws ResponseParseException {
+    final Transceiver t = new MockTransceiver(null, TEST_09);
+    Status.getInstance(t);
   }
-
-  public void test02_multiLineTest() {
-    String reg = "^.*x=(\\d+).*\\s.*x=(\\d+).*\\s.*x=(\\d+).*$";
-    String input = "##x=6##\n##x=8##\n##x=8##";
-    Pattern p3 = Pattern.compile(reg, Pattern.MULTILINE);
-    Matcher m = p3.matcher(input);
-
-    if (!m.matches()) {
-      fail();
-    }
-
-
-  }
-
 }
