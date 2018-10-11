@@ -78,16 +78,16 @@ two switches and five additional LEDs.
 
 ## Shield PCB
 
-![Daughter Board for Raspberry PI](https://github.com/geri-m/vcable/img/pcb.jpg)
+![Daughter Board for Raspberry PI](https://github.com/geri-m/vcable/blob/master/img/pcb.jpg)
 
 ## Pictures of VCable Prototype Version 1
 
-![VCable Prototype Version 1](https://github.com/geri-m/vcable/img/vc01.jpg)
-![VCable Prototype Version 1](https://github.com/geri-m/vcable/img/vc02.jpg)
-![VCable Prototype Version 1](https://github.com/geri-m/vcable/img/vc03.jpg)
+![VCable Prototype Version 1](https://github.com/geri-m/vcable/blob/master/img/vc01.jpg)
+![VCable Prototype Version 1](https://github.com/geri-m/vcable/blob/master/img/vc02.jpg)
+![VCable Prototype Version 1](https://github.com/geri-m/vcable/blob/master/img/vc03.jpg)
 
 ## Pictures of VCable Prototype Version 2
 
-![VCable Housing Prototype](https://github.com/geri-m/vcable/img/vc04.jpg)
-![VCable Housing Prototype](https://github.com/geri-m/vcable/img/vc05.jpg)
+![VCable Housing Prototype](https://github.com/geri-m/vcable/blob/master/img/vc04.jpg)
+![VCable Housing Prototype](https://github.com/geri-m/vcable/blob/master/img/vc05.jpg)
 
