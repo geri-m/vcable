@@ -70,3 +70,24 @@ Run the Client with this Config in a Container
 ```
 docker run -v $OVPN_DATA:/etc/openvpn -v /dev/net/tun:/dev/net/tun --network=host --rm --cap-add=NET_ADMIN kylemanna/openvpn openvpn --config /etc/openvpn/client_1.ovpn
 ```
+
+# Hardware in Use
+
+The hardware we are using is a Raspberry PI with a custom shield. The shield holds an Ericsson LTE Modem, an NFC Interface with an NXP PN531,
+two switches and five additional LEDs.
+
+## Shield PCB
+
+![Daughter Board for Raspberry PI](https://github.com/geri-m/vcable/img/pcb.jpg)
+
+## Pictures of VCable Prototype Version 1
+
+![VCable Prototype Version 1](https://github.com/geri-m/vcable/img/vc01.jpg)
+![VCable Prototype Version 1](https://github.com/geri-m/vcable/img/vc02.jpg)
+![VCable Prototype Version 1](https://github.com/geri-m/vcable/img/vc03.jpg)
+
+## Pictures of VCable Prototype Version 2
+
+![VCable Housing Prototype](https://github.com/geri-m/vcable/img/vc04.jpg)
+![VCable Housing Prototype](https://github.com/geri-m/vcable/img/vc05.jpg)
+
